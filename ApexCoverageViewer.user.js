@@ -46,10 +46,28 @@
       uncoveredLines: Object.keys(uncoveredHash).map(toInt)
     };
   };
+  ApexCoverageViewer.setStyleSheet = function setStyleSheet() {
+    var el = document.createElement('style');
+    el.type = 'text/css';
+    el.id = 'acv-css';
+    el.innerHTML = '' +
+'.acv-line-header {' +
+' display: inline-block;' +
+' width: 100%;' +
+'}' +
+'.acv-covered {' +
+' background-color: #CCFFFF;' +
+'}' +
+'.acv-uncovered {' +
+' background-color: #FFCCCC;' +
+'}';
+    document.head.appendChild(el);
+  };
   ApexCoverageViewer.showCurrentPageCoverage = function showCurrentPageCoverage() {
     var currentPageId = location.pathname.replace(/^\//, '');
     var mergeCoveredLines = this.mergeCoveredLines,
-        getNodesByXpath = this.getNodesByXpath;
+        getNodesByXpath = this.getNodesByXpath,
+        setStyleSheet = this.setStyleSheet;
     this.getCoverageByClassId(currentPageId, function (qr) {
       function pickCoverageField(rec) {
         return rec.Coverage;
@@ -64,23 +82,23 @@
         hash[node.nodeValue] = node;
         return hash;
       }, {});
+      setStyleSheet();
       function boxize(node) {
         var box = document.createElement('span'),
             parent = node.parentNode;
         box.textContent = node.nodeValue;
-        box.style.width = '100%';
-        box.style.display = 'inline-block';
+        box.classList.add('acv-line-header');
         parent.insertBefore(box, node);
         parent.removeChild(node);
         return box;
       }
       coverage.coveredLines.forEach(function (line) {
         var box = boxize(headerHash[line]);
-        box.style.backgroundColor = '#CCFFFF';
+        box.classList.add('acv-covered');
       });
       coverage.uncoveredLines.forEach(function (line) {
         var box = boxize(headerHash[line]);
-        box.style.backgroundColor = '#FFCCCC';
+        box.classList.add('acv-uncovered');
       });
     });
   };
