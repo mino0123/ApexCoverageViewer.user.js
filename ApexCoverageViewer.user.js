@@ -68,6 +68,8 @@
         var box = document.createElement('span'),
             parent = node.parentNode;
         box.textContent = node.nodeValue;
+        box.style.width = '100%';
+        box.style.display = 'inline-block';
         parent.insertBefore(box, node);
         parent.removeChild(node);
         return box;
