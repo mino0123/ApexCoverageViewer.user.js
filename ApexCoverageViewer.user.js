@@ -95,7 +95,8 @@
     this.setStyleSheet();
     var xpath = '//td[@id="ApexClassViewPage:theTemplate:theForm:thePageBlock:j_id70:j_id71:j_id74:0:j_id75"]/text()';
     var lineHeaders = this.getNodesByXpath(xpath);
-    var headerHash = lineHeaders.reduce(function (hash, node) {
+    // use reduce without Prototype.js
+    var headerHash = lineHeaders.reduceRight(function (hash, node) {
       hash[node.nodeValue] = boxize(node);
       return hash;
     }, {});
